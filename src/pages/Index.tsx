@@ -83,7 +83,7 @@ const Index = () => {
       setStatus("warning");
       toast({
         title: "NO API KEY",
-        description: "Open Settings (⚙) to add your Gemini API key. Get one free at aistudio.google.com",
+        description: "Open Settings (⚙) to add your Groq API key. Get one free at console.groq.com",
       });
       setIsProcessing(false);
       setTimeout(() => setStatus("ready"), 2000);
