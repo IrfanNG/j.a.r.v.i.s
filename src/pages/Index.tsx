@@ -6,10 +6,9 @@ import HUDCard from "@/components/HUDCard";
 import ArcReactorSpinner from "@/components/ArcReactorSpinner";
 import ScanLineOverlay from "@/components/ScanLineOverlay";
 import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator";
-import SettingsModal from "@/components/SettingsModal";
 import { Button } from "@/components/ui/button";
 
-import { generateWithGroq, getApiKey } from "@/lib/groq";
+import { generateWithGroq } from "@/lib/groq";
 
 interface ROFTCOData {
   role: string;
