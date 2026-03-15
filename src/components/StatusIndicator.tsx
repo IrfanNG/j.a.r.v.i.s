@@ -12,6 +12,7 @@ const statusMessages: Record<SystemStatus, string> = {
   processing: "PARSING NEURAL DUMP...",
   complete: "SEQUENCE COMPLETE",
   error: "SYSTEM ERROR — RETRY PROTOCOL",
+  warning: "SYSTEM WARNING — CHECK CONFIG",
 };
 
 const StatusIndicator = ({ status }: StatusIndicatorProps) => {
