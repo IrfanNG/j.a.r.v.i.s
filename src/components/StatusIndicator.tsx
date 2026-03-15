@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 
-type SystemStatus = "booting" | "ready" | "processing" | "complete" | "error";
+type SystemStatus = "booting" | "ready" | "processing" | "complete" | "error" | "warning";
 
 interface StatusIndicatorProps {
   status: SystemStatus;
@@ -12,6 +12,7 @@ const statusMessages: Record<SystemStatus, string> = {
   processing: "PARSING NEURAL DUMP...",
   complete: "SEQUENCE COMPLETE",
   error: "SYSTEM ERROR — RETRY PROTOCOL",
+  warning: "SYSTEM WARNING — CHECK CONFIG",
 };
 
 const StatusIndicator = ({ status }: StatusIndicatorProps) => {
@@ -20,6 +21,7 @@ const StatusIndicator = ({ status }: StatusIndicatorProps) => {
       <motion.div
         className={`w-2 h-2 ${
           status === "error" ? "bg-primary" :
+          status === "warning" ? "bg-[hsl(var(--warning))]" :
           status === "processing" ? "bg-foreground" :
           "bg-foreground"
         }`}
@@ -43,7 +45,7 @@ const StatusIndicator = ({ status }: StatusIndicatorProps) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 10 }}
           transition={{ duration: 0.2 }}
-          className={status === "error" ? "text-primary" : "text-foreground/70"}
+          className={status === "error" ? "text-primary" : status === "warning" ? "text-[hsl(var(--warning))]" : "text-foreground/70"}
         >
           {statusMessages[status]}
         </motion.span>
