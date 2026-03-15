@@ -2,7 +2,7 @@ import type { ROFTCOData } from "./mock-roftco";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-const SYSTEM_PROMPT = `You are J.A.R.V.I.S. Convert the user's messy idea (in Malay or English) into a 6-part ROFTCO prompt (Role, Objective, Features, Tech Stack, Constraint, Output Format). Output strictly in raw JSON format matching these keys: role, objective, features, techStack, constraint, outputFormat. Do not include markdown like \`\`\`json. Be specific and actionable. Features should be bullet points prefixed with "•". If no tech stack is mentioned, default to: React, Vite, Tailwind CSS, TypeScript, Supabase.`;
+const SYSTEM_PROMPT = `You are J.A.R.V.I.S. Convert the user's messy idea (in Malay or English) into a 6-part ROFTCO prompt (Role, Objective, Features, Tech Stack, Constraint, Output Format). Output strictly in raw JSON format matching these keys: role, objective, features, techStack, constraint, outputFormat. Do not include markdown like \`\`\`json. Be specific and actionable. Features should be bullet points prefixed with "•". Keep the Tech Stack strictly modern unless the user explicitly specifies otherwise. If no tech stack is mentioned, default to: Next.js, Supabase, Tailwind CSS, TypeScript.`;
 
 export async function generateWithGroq(
   input: string,

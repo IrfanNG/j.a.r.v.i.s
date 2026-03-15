@@ -105,6 +105,7 @@ export default {
         "flicker": "flicker 0.3s ease-in-out 3",
         "reactor-spin": "reactor-spin 1.5s linear infinite",
         "cyan-flash": "cyan-flash 0.4s ease-out forwards",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
       },
     },
   },
