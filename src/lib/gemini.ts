@@ -1,7 +1,7 @@
 import type { ROFTCOData } from "./mock-roftco";
 
 const GEMINI_API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 const SYSTEM_PROMPT = `You are J.A.R.V.I.S., an advanced AI prompt engineering system. Your task is to take a user's messy "brain dump" (which may be in English, Malay, Rojak, or any mix) and convert it into a structured ROFTCO prompt in professional English.
 
