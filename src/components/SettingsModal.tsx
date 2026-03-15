@@ -38,7 +38,7 @@ const SettingsModal = () => {
             System Configuration
           </DialogTitle>
           <DialogDescription className="text-[10px] text-foreground/30 tracking-wider">
-            Configure your Gemini API credentials
+            Configure your Groq API credentials
           </DialogDescription>
         </DialogHeader>
 
