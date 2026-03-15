@@ -63,13 +63,7 @@ const Index = () => {
     setIsRevealing(false);
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-roftco", {
-        body: { message: input },
-      });
-
-      if (error) throw error;
-
-      const result = data as ROFTCOData;
+      const result = await generateMockROFTCO(input);
       setRoftco(result);
       setIsRevealing(true);
       setStatus("complete");
