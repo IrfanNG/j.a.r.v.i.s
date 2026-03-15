@@ -52,7 +52,7 @@ const SettingsModal = () => {
                 type={showKey ? "text" : "password"}
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
-                placeholder="Enter your Gemini API key..."
+                placeholder="Enter your Groq API key..."
                 className="w-full bg-background border border-border text-foreground text-xs p-3 pr-10
                   placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
               />
