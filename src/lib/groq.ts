@@ -93,9 +93,27 @@ export async function generateWithGroq(
   const parsed = JSON.parse(text);
 
   const str = (val: unknown): string => {
-    if (typeof val === "string") return val;
-    if (Array.isArray(val)) return val.map((v) => `• ${v}`).join("\n");
-    if (val && typeof val === "object") return JSON.stringify(val);
+    if (typeof val === "string") {
+      return val.replace(/•\s*•/g, "•").trim();
+    }
+    if (Array.isArray(val)) {
+      return val
+        .map((v) => {
+          const s = typeof v === "string" ? v : JSON.stringify(v);
+          return `• ${s.replace(/^[•\-\*]\s*/, "").trim()}`;
+        })
+        .join("\n");
+    }
+    if (val && typeof val === "object") {
+      const obj = val as Record<string, unknown>;
+      const textKeys = ["description", "text", "summary", "content", "value"];
+      for (const k of textKeys) {
+        if (typeof obj[k] === "string") return obj[k] as string;
+      }
+      const values = Object.values(obj).filter((v) => typeof v === "string");
+      if (values.length) return (values as string[]).join(" ");
+      return JSON.stringify(val);
+    }
     return String(val ?? "");
   };
 
