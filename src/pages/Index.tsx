@@ -93,22 +93,9 @@ const Index = () => {
     setRoftco(emptyRoftco);
     setIsRevealing(false);
 
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      setStatus("warning");
-      toast({
-        title: "NO API KEY",
-        description: "Open Settings (⚙) to add your Groq API key. Get one free at console.groq.com",
-      });
-      setIsProcessing(false);
-      setTimeout(() => setStatus("ready"), 2000);
-      return;
-    }
-
     try {
-      console.log("J.A.R.V.I.S. Engine: API Key detected");
       console.log("J.A.R.V.I.S. Engine: Connecting to Groq...");
-      const result = await generateWithGroq(input, apiKey);
+      const result = await generateWithGroq(input);
       console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);
