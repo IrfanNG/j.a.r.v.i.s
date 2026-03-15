@@ -54,9 +54,13 @@ RULES — follow every one precisely:
 Be bold, creative, and deeply technical. Every ROFTCO output should feel like it was written by a world-class consultant, not a template engine.`;
 
 export async function generateWithGroq(
-  input: string,
-  apiKey: string
+  input: string
 ): Promise<ROFTCOData> {
+  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+  if (!apiKey) {
+    throw new Error("VITE_GROQ_API_KEY is not configured. Add it as a build secret in Workspace Settings.");
+  }
+
   const response = await fetch(GROQ_API_URL, {
     method: "POST",
     headers: {
