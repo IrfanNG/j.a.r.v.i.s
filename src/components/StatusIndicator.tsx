@@ -21,6 +21,7 @@ const StatusIndicator = ({ status }: StatusIndicatorProps) => {
       <motion.div
         className={`w-2 h-2 ${
           status === "error" ? "bg-primary" :
+          status === "warning" ? "bg-[hsl(var(--warning))]" :
           status === "processing" ? "bg-foreground" :
           "bg-foreground"
         }`}
