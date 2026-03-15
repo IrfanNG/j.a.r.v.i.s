@@ -45,7 +45,7 @@ const StatusIndicator = ({ status }: StatusIndicatorProps) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 10 }}
           transition={{ duration: 0.2 }}
-          className={status === "error" ? "text-primary" : "text-foreground/70"}
+          className={status === "error" ? "text-primary" : status === "warning" ? "text-[hsl(var(--warning))]" : "text-foreground/70"}
         >
           {statusMessages[status]}
         </motion.span>

@@ -47,6 +47,9 @@
 
     --cyan-glow: 0 0 10px hsl(180 100% 50% / 0.4), 0 0 20px hsl(180 100% 50% / 0.2);
     --red-glow: 0 0 10px hsl(354 85% 42% / 0.4), 0 0 20px hsl(354 85% 42% / 0.2);
+    --gold-glow: 0 0 10px hsl(43 100% 50% / 0.4), 0 0 20px hsl(43 100% 50% / 0.2);
+    --warning: 43 100% 50%;
+    --warning-foreground: 0 0% 0%;
   }
 
   .dark {
