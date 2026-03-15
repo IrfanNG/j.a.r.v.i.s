@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Zap, Terminal } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -46,6 +46,14 @@ const Index = () => {
   const [isRevealing, setIsRevealing] = useState(false);
   const [booted, setBooted] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
+  const [ghostIndex, setGhostIndex] = useState(0);
+
+  const GHOST_TEXTS = useMemo(() => [
+    "App jual nasi lemak...",
+    "UniKL student house hunting app...",
+    "Travel planner for Cuti-Cuti Malaysia...",
+    "Borang kehadiran pelajar...",
+  ], []);
 
   // Boot sequence
   useEffect(() => {
@@ -59,6 +67,14 @@ const Index = () => {
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Ghost text rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGhostIndex((i) => (i + 1) % GHOST_TEXTS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [GHOST_TEXTS.length]);
 
   const handleGenerate = useCallback(async () => {
     if (!input.trim() || isProcessing) return;
@@ -224,12 +240,27 @@ const Index = () => {
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="AWAITING INPUT... Type your idea in any language — English, Malay, Rojak..."
+              placeholder=""
               className="w-full min-h-[180px] bg-card border border-border text-foreground font-body text-sm p-4 resize-none
                 placeholder:text-muted-foreground placeholder:font-mono-hud placeholder:text-xs placeholder:tracking-wider
                 focus:outline-none focus:border-foreground focus:border-glow-cyan transition-all duration-300"
               disabled={isProcessing}
             />
+            {/* Ghost text */}
+            {!input && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={ghostIndex}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute top-4 left-4 pointer-events-none font-mono-hud text-xs tracking-wider text-muted-foreground"
+                >
+                  {GHOST_TEXTS[ghostIndex]}
+                </motion.div>
+              </AnimatePresence>
+            )}
             {/* Corner accents on textarea */}
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
             <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
@@ -251,9 +282,9 @@ const Index = () => {
             <Button
               onClick={handleGenerate}
               disabled={!input.trim()}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
+              className={`bg-primary hover:bg-primary/90 text-primary-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
                 px-8 py-3 h-auto border border-primary/50 hover:border-glow-red transition-all duration-300
-                disabled:opacity-30 disabled:cursor-not-allowed"
+                disabled:opacity-30 disabled:cursor-not-allowed ${input.trim() ? "animate-pulse-glow" : ""}`}
             >
               <Zap className="w-4 h-4 mr-2" />
               Initiate Protocol
@@ -307,7 +338,7 @@ const Index = () => {
         {/* Footer */}
         <footer className="mt-16 border-t border-border/30 pt-4 flex items-center justify-between">
           <span className="font-mono-hud text-[10px] tracking-[0.2em] text-foreground/20 uppercase">
-            Stark Industries — Internal Use Only
+            Stark Industries × KD x UniKL Builders
           </span>
           <span className="font-mono-hud text-[10px] tracking-[0.2em] text-foreground/20 uppercase">
             v1.0.0-alpha

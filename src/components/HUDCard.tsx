@@ -8,12 +8,15 @@ interface HUDCardProps {
 }
 
 const HUDCard = ({ label, content, index, isRevealing }: HUDCardProps) => {
+  const hasContent = content && content.trim().length > 0;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.15, duration: 0.5 }}
-      className="relative border border-border bg-card p-4 min-h-[140px] group hover:border-glow-cyan transition-all duration-300"
+      className={`relative border bg-card p-4 min-h-[140px] group transition-all duration-300 ${
+        hasContent ? "border-foreground/40 border-glow-cyan" : "border-border hover:border-glow-cyan"
+      }`}
     >
       {/* Corner brackets */}
       <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-foreground" />

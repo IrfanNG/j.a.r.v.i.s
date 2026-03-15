@@ -138,3 +138,21 @@
     hsl(180 100% 50% / 0.015) 4px
   );
 }
+
+/* Animated sweep line */
+.scan-sweep-line {
+  pointer-events: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 51;
+  background: linear-gradient(90deg, transparent, hsl(180 100% 50% / 0.4), transparent);
+  box-shadow: 0 0 12px hsl(180 100% 50% / 0.3);
+  animation: scan-move 4s linear infinite;
+}
+
+@keyframes scan-move {
+  0% { top: -2px; }
+  100% { top: 100vh; }
+}
