@@ -3,6 +3,7 @@ import { Settings, Eye, EyeOff } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
