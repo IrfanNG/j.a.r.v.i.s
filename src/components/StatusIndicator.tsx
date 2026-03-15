@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 
-type SystemStatus = "booting" | "ready" | "processing" | "complete" | "error";
+type SystemStatus = "booting" | "ready" | "processing" | "complete" | "error" | "warning";
 
 interface StatusIndicatorProps {
   status: SystemStatus;
