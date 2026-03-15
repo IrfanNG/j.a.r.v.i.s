@@ -61,14 +61,9 @@ export async function generateWithGemini(
 }
 
 const STORAGE_KEY = "jarvis-gemini-api-key";
-const DEFAULT_KEY = "AIzaSyDD4S3f1UgbSizIXwhJFEr1cNO0wUqRBV0";
 
 export function getApiKey(): string {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) return stored;
-  // Set default on first access
-  localStorage.setItem(STORAGE_KEY, DEFAULT_KEY);
-  return DEFAULT_KEY;
+  return localStorage.getItem(STORAGE_KEY) || "";
 }
 
 export function setApiKey(key: string): void {

@@ -78,8 +78,19 @@ const Index = () => {
     setRoftco(emptyRoftco);
     setIsRevealing(false);
 
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      setStatus("warning");
+      toast({
+        title: "NO API KEY",
+        description: "Open Settings (⚙) to add your Gemini API key. Get one free at aistudio.google.com",
+      });
+      setIsProcessing(false);
+      setTimeout(() => setStatus("ready"), 2000);
+      return;
+    }
+
     try {
-      const apiKey = getApiKey();
       console.log("J.A.R.V.I.S. Engine: API Key detected");
       console.log("J.A.R.V.I.S. Engine: Connecting to Gemini...");
       const result = await generateWithGemini(input, apiKey);
@@ -88,28 +99,18 @@ const Index = () => {
       setIsRevealing(true);
       setStatus("complete");
     } catch (err: any) {
-      console.error("J.A.R.V.I.S. Engine: Connection failed", err);
+      console.error("J.A.R.V.I.S. Engine: Connection failed —", err.message);
       setStatus("error");
 
       const statusCode = err?.status;
+      const msg = err?.message || "Unknown error";
+
       if (statusCode === 429) {
-        toast({
-          title: "SYSTEM OVERHEAT",
-          description: "Rate limit exceeded. Retry in a moment.",
-          variant: "destructive",
-        });
-      } else if (statusCode === 401 || statusCode === 403) {
-        toast({
-          title: "ACCESS DENIED",
-          description: "Invalid API key. Check Settings.",
-          variant: "destructive",
-        });
+        toast({ title: "SYSTEM OVERHEAT", description: "Rate limit exceeded. Retry in a moment.", variant: "destructive" });
+      } else if (statusCode === 400 || statusCode === 401 || statusCode === 403) {
+        toast({ title: "ACCESS DENIED", description: msg, variant: "destructive" });
       } else {
-        toast({
-          title: "SYSTEM ERROR",
-          description: "Connection to Gemini failed. Check your API key in Settings.",
-          variant: "destructive",
-        });
+        toast({ title: "SYSTEM ERROR", description: msg, variant: "destructive" });
       }
     } finally {
       setIsProcessing(false);

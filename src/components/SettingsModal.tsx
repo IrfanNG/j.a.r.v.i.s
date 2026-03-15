@@ -37,6 +37,9 @@ const SettingsModal = () => {
           <DialogTitle className="font-mono-hud text-foreground text-xs tracking-[0.3em] uppercase">
             System Configuration
           </DialogTitle>
+          <DialogDescription className="text-[10px] text-foreground/30 tracking-wider">
+            Configure your Gemini API credentials
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
