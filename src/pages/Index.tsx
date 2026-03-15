@@ -6,8 +6,10 @@ import HUDCard from "@/components/HUDCard";
 import ArcReactorSpinner from "@/components/ArcReactorSpinner";
 import ScanLineOverlay from "@/components/ScanLineOverlay";
 import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator";
+import SettingsModal from "@/components/SettingsModal";
 import { Button } from "@/components/ui/button";
 import { generateMockROFTCO } from "@/lib/mock-roftco";
+import { generateWithGemini, getApiKey } from "@/lib/gemini";
 
 interface ROFTCOData {
   role: string;
