@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getApiKey, setApiKey } from "@/lib/gemini";
+import { getApiKey, setApiKey } from "@/lib/groq";
 
 const SettingsModal = () => {
   const [open, setOpen] = useState(false);
