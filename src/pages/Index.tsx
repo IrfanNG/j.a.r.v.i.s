@@ -338,7 +338,7 @@ const Index = () => {
         {/* Footer */}
         <footer className="mt-16 border-t border-border/30 pt-4 flex items-center justify-between">
           <span className="font-mono-hud text-[10px] tracking-[0.2em] text-foreground/20 uppercase">
-            Stark Industries — Internal Use Only
+            Stark Industries × KD x UniKL Builders
           </span>
           <span className="font-mono-hud text-[10px] tracking-[0.2em] text-foreground/20 uppercase">
             v1.0.0-alpha
