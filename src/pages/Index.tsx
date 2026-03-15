@@ -80,32 +80,34 @@ const Index = () => {
 
     try {
       const apiKey = getApiKey();
-      let result;
-      if (apiKey) {
-        result = await generateWithGemini(input, apiKey);
-      } else {
-        result = await generateMockROFTCO(input);
-      }
+      console.log("J.A.R.V.I.S. Engine: API Key detected");
+      console.log("J.A.R.V.I.S. Engine: Connecting to Gemini...");
+      const result = await generateWithGemini(input, apiKey);
+      console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);
       setStatus("complete");
-    } catch (err) {
-      console.error("Generation error:", err);
-      // Fallback to mock on API failure
-      try {
-        const fallback = await generateMockROFTCO(input);
-        setRoftco(fallback);
-        setIsRevealing(true);
-        setStatus("complete");
+    } catch (err: any) {
+      console.error("J.A.R.V.I.S. Engine: Connection failed", err);
+      setStatus("error");
+
+      const statusCode = err?.status;
+      if (statusCode === 429) {
         toast({
-          title: "FALLBACK ACTIVE",
-          description: "Gemini unavailable. Used local template engine.",
+          title: "SYSTEM OVERHEAT",
+          description: "Rate limit exceeded. Retry in a moment.",
+          variant: "destructive",
         });
-      } catch {
-        setStatus("error");
+      } else if (statusCode === 401 || statusCode === 403) {
+        toast({
+          title: "ACCESS DENIED",
+          description: "Invalid API key. Check Settings.",
+          variant: "destructive",
+        });
+      } else {
         toast({
           title: "SYSTEM ERROR",
-          description: "Failed to parse neural dump. Retry protocol.",
+          description: "Connection to Gemini failed. Check your API key in Settings.",
           variant: "destructive",
         });
       }
