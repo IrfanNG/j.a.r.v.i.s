@@ -92,8 +92,8 @@ const Index = () => {
 
     try {
       console.log("J.A.R.V.I.S. Engine: API Key detected");
-      console.log("J.A.R.V.I.S. Engine: Connecting to Gemini...");
-      const result = await generateWithGemini(input, apiKey);
+      console.log("J.A.R.V.I.S. Engine: Connecting to Groq...");
+      const result = await generateWithGroq(input, apiKey);
       console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);

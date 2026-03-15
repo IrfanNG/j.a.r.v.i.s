@@ -66,12 +66,12 @@ const SettingsModal = () => {
             <p className="text-[9px] text-foreground/30 mt-2 tracking-wider">
               FREE — Get yours at{" "}
               <a
-                href="https://aistudio.google.com/app/apikey"
+                href="https://console.groq.com/keys"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-foreground/50 underline hover:text-foreground"
               >
-                aistudio.google.com
+                console.groq.com
               </a>
             </p>
           </div>
