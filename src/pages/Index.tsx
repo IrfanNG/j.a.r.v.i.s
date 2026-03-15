@@ -9,7 +9,7 @@ import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator
 import SettingsModal from "@/components/SettingsModal";
 import { Button } from "@/components/ui/button";
 
-import { generateWithGemini, getApiKey } from "@/lib/gemini";
+import { generateWithGroq, getApiKey } from "@/lib/groq";
 
 interface ROFTCOData {
   role: string;
@@ -83,7 +83,7 @@ const Index = () => {
       setStatus("warning");
       toast({
         title: "NO API KEY",
-        description: "Open Settings (⚙) to add your Gemini API key. Get one free at aistudio.google.com",
+        description: "Open Settings (⚙) to add your Groq API key. Get one free at console.groq.com",
       });
       setIsProcessing(false);
       setTimeout(() => setStatus("ready"), 2000);
@@ -92,8 +92,8 @@ const Index = () => {
 
     try {
       console.log("J.A.R.V.I.S. Engine: API Key detected");
-      console.log("J.A.R.V.I.S. Engine: Connecting to Gemini...");
-      const result = await generateWithGemini(input, apiKey);
+      console.log("J.A.R.V.I.S. Engine: Connecting to Groq...");
+      const result = await generateWithGroq(input, apiKey);
       console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);

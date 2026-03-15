@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getApiKey, setApiKey } from "@/lib/gemini";
+import { getApiKey, setApiKey } from "@/lib/groq";
 
 const SettingsModal = () => {
   const [open, setOpen] = useState(false);
@@ -38,21 +38,21 @@ const SettingsModal = () => {
             System Configuration
           </DialogTitle>
           <DialogDescription className="text-[10px] text-foreground/30 tracking-wider">
-            Configure your Gemini API credentials
+            Configure your Groq API credentials
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
           <div>
             <label className="text-[10px] tracking-[0.2em] uppercase text-foreground/50 block mb-2">
-              Gemini API Key
+              Groq API Key
             </label>
             <div className="relative">
               <input
                 type={showKey ? "text" : "password"}
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
-                placeholder="Enter your Gemini API key..."
+                placeholder="Enter your Groq API key..."
                 className="w-full bg-background border border-border text-foreground text-xs p-3 pr-10
                   placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
               />
@@ -66,12 +66,12 @@ const SettingsModal = () => {
             <p className="text-[9px] text-foreground/30 mt-2 tracking-wider">
               FREE — Get yours at{" "}
               <a
-                href="https://aistudio.google.com/app/apikey"
+                href="https://console.groq.com/keys"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-foreground/50 underline hover:text-foreground"
               >
-                aistudio.google.com
+                console.groq.com
               </a>
             </p>
           </div>
