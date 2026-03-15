@@ -46,13 +46,13 @@ const Index = () => {
   const [showFlash, setShowFlash] = useState(false);
 
   // Boot sequence
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setStatus("ready");
       setBooted(true);
     }, 2000);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   const handleGenerate = useCallback(async () => {
     if (!input.trim() || isProcessing) return;
