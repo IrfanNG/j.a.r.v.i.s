@@ -131,18 +131,3 @@ export async function generateWithGroq(
   };
 }
 
-const STORAGE_KEY = "jarvis-groq-api-key";
-const DEFAULT_KEY = "REDACTED_API_KEY";
-
-export function getApiKey(): string {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(STORAGE_KEY, DEFAULT_KEY);
-    return DEFAULT_KEY;
-  }
-  return stored;
-}
-
-export function setApiKey(key: string): void {
-  localStorage.setItem(STORAGE_KEY, key);
-}

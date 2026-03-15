@@ -202,7 +202,6 @@ const Index = () => {
             <h1 className="font-mono-hud text-foreground text-sm tracking-[0.3em] uppercase">
               J.A.R.V.I.S.
             </h1>
-            <SettingsModal />
           </div>
           <StatusIndicator status={status} />
         </header>
