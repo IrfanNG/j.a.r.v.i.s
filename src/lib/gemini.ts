@@ -39,8 +39,13 @@ export async function generateWithGemini(
   });
 
   if (!response.ok) {
-    const err = await response.text();
-    const error = new Error(`Gemini API error (${response.status}): ${err}`);
+    const errBody = await response.text();
+    let message = `Gemini API error (${response.status})`;
+    try {
+      const parsed = JSON.parse(errBody);
+      message = parsed?.error?.message || message;
+    } catch { /* use default message */ }
+    const error = new Error(message);
     (error as any).status = response.status;
     throw error;
   }
