@@ -68,6 +68,14 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Ghost text rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGhostIndex((i) => (i + 1) % GHOST_TEXTS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [GHOST_TEXTS.length]);
+
   const handleGenerate = useCallback(async () => {
     if (!input.trim() || isProcessing) return;
 
