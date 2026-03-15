@@ -240,12 +240,27 @@ const Index = () => {
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="AWAITING INPUT... Type your idea in any language — English, Malay, Rojak..."
+              placeholder=""
               className="w-full min-h-[180px] bg-card border border-border text-foreground font-body text-sm p-4 resize-none
                 placeholder:text-muted-foreground placeholder:font-mono-hud placeholder:text-xs placeholder:tracking-wider
                 focus:outline-none focus:border-foreground focus:border-glow-cyan transition-all duration-300"
               disabled={isProcessing}
             />
+            {/* Ghost text */}
+            {!input && (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={ghostIndex}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute top-4 left-4 pointer-events-none font-mono-hud text-xs tracking-wider text-muted-foreground"
+                >
+                  {GHOST_TEXTS[ghostIndex]}
+                </motion.div>
+              </AnimatePresence>
+            )}
             {/* Corner accents on textarea */}
             <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
             <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
