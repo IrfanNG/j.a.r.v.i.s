@@ -9,7 +9,7 @@ import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator
 import SettingsModal from "@/components/SettingsModal";
 import { Button } from "@/components/ui/button";
 
-import { generateWithGemini, getApiKey } from "@/lib/gemini";
+import { generateWithGroq, getApiKey } from "@/lib/groq";
 
 interface ROFTCOData {
   role: string;
