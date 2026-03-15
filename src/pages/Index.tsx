@@ -282,9 +282,9 @@ const Index = () => {
             <Button
               onClick={handleGenerate}
               disabled={!input.trim()}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
+              className={`bg-primary hover:bg-primary/90 text-primary-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
                 px-8 py-3 h-auto border border-primary/50 hover:border-glow-red transition-all duration-300
-                disabled:opacity-30 disabled:cursor-not-allowed"
+                disabled:opacity-30 disabled:cursor-not-allowed ${input.trim() ? "animate-pulse-glow" : ""}`}
             >
               <Zap className="w-4 h-4 mr-2" />
               Initiate Protocol
