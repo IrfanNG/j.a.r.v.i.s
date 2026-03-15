@@ -42,13 +42,21 @@ export async function generateWithGroq(
   if (!text) throw new Error("Empty response from Groq");
 
   const parsed = JSON.parse(text);
+
+  const str = (val: unknown): string => {
+    if (typeof val === "string") return val;
+    if (Array.isArray(val)) return val.map((v) => `• ${v}`).join("\n");
+    if (val && typeof val === "object") return JSON.stringify(val);
+    return String(val ?? "");
+  };
+
   return {
-    role: parsed.role || "",
-    objective: parsed.objective || "",
-    features: parsed.features || "",
-    techStack: parsed.techStack || "",
-    constraint: parsed.constraint || "",
-    outputFormat: parsed.outputFormat || "",
+    role: str(parsed.role),
+    objective: str(parsed.objective),
+    features: str(parsed.features),
+    techStack: str(parsed.techStack),
+    constraint: str(parsed.constraint),
+    outputFormat: str(parsed.outputFormat),
   };
 }
 
