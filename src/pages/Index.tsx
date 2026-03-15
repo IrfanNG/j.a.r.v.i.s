@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Zap, Terminal } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -7,7 +7,7 @@ import ArcReactorSpinner from "@/components/ArcReactorSpinner";
 import ScanLineOverlay from "@/components/ScanLineOverlay";
 import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { generateMockROFTCO } from "@/lib/mock-roftco";
 
 interface ROFTCOData {
   role: string;
