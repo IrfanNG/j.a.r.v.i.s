@@ -46,6 +46,14 @@ const Index = () => {
   const [isRevealing, setIsRevealing] = useState(false);
   const [booted, setBooted] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
+  const [ghostIndex, setGhostIndex] = useState(0);
+
+  const GHOST_TEXTS = useMemo(() => [
+    "App jual nasi lemak...",
+    "UniKL student house hunting app...",
+    "Travel planner for Cuti-Cuti Malaysia...",
+    "Borang kehadiran pelajar...",
+  ], []);
 
   // Boot sequence
   useEffect(() => {
