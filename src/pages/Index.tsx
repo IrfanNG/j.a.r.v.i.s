@@ -59,24 +59,52 @@ const Index = () => {
   const handleGenerate = useCallback(async () => {
     if (!input.trim() || isProcessing) return;
 
+    if (input.trim().length < 10) {
+      setStatus("warning");
+      toast({
+        title: "SYSTEM WARNING",
+        description: "Input too short. Provide more detail for accurate parsing.",
+      });
+      setTimeout(() => setStatus("ready"), 2000);
+      return;
+    }
+
     setIsProcessing(true);
     setStatus("processing");
     setRoftco(emptyRoftco);
     setIsRevealing(false);
 
     try {
-      const result = await generateMockROFTCO(input);
+      const apiKey = getApiKey();
+      let result;
+      if (apiKey) {
+        result = await generateWithGemini(input, apiKey);
+      } else {
+        result = await generateMockROFTCO(input);
+      }
       setRoftco(result);
       setIsRevealing(true);
       setStatus("complete");
     } catch (err) {
       console.error("Generation error:", err);
-      setStatus("error");
-      toast({
-        title: "SYSTEM ERROR",
-        description: "Failed to parse neural dump. Retry protocol.",
-        variant: "destructive",
-      });
+      // Fallback to mock on API failure
+      try {
+        const fallback = await generateMockROFTCO(input);
+        setRoftco(fallback);
+        setIsRevealing(true);
+        setStatus("complete");
+        toast({
+          title: "FALLBACK ACTIVE",
+          description: "Gemini unavailable. Used local template engine.",
+        });
+      } catch {
+        setStatus("error");
+        toast({
+          title: "SYSTEM ERROR",
+          description: "Failed to parse neural dump. Retry protocol.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsProcessing(false);
     }
