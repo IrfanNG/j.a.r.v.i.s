@@ -45,7 +45,7 @@ const SettingsModal = () => {
         <div className="space-y-4 mt-2">
           <div>
             <label className="text-[10px] tracking-[0.2em] uppercase text-foreground/50 block mb-2">
-              Gemini API Key
+              Groq API Key
             </label>
             <div className="relative">
               <input
