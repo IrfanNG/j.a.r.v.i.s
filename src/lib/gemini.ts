@@ -66,14 +66,17 @@ export async function generateWithGemini(
 }
 
 const STORAGE_KEY = "jarvis-gemini-api-key";
-
+const EXPIRED_KEY = "AIzaSyDD4S3f1UgbSizIXwhJFEr1cNO0wUqRBV0";
 const DEFAULT_KEY = "AIzaSyDZIzMoqi9ueQEswIdnhJXjsBixOzpLQcU";
 
 export function getApiKey(): string {
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) return stored;
-  localStorage.setItem(STORAGE_KEY, DEFAULT_KEY);
-  return DEFAULT_KEY;
+  // Migrate away from expired key
+  if (stored === EXPIRED_KEY || !stored) {
+    localStorage.setItem(STORAGE_KEY, DEFAULT_KEY);
+    return DEFAULT_KEY;
+  }
+  return stored;
 }
 
 export function setApiKey(key: string): void {
