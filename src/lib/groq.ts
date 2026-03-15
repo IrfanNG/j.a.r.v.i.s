@@ -21,6 +21,7 @@ export async function generateWithGroq(
         { role: "user", content: input },
       ],
       temperature: 0.7,
+      response_format: { type: "json_object" },
     }),
   });
 
