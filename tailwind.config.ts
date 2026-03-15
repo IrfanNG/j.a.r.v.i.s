@@ -93,6 +93,10 @@ export default {
           "0%": { opacity: "0.6" },
           "100%": { opacity: "0" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 8px hsl(354 85% 42% / 0.3)", transform: "scale(1)" },
+          "50%": { boxShadow: "0 0 20px hsl(354 85% 42% / 0.6)", transform: "scale(1.03)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
