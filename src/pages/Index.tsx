@@ -6,10 +6,9 @@ import HUDCard from "@/components/HUDCard";
 import ArcReactorSpinner from "@/components/ArcReactorSpinner";
 import ScanLineOverlay from "@/components/ScanLineOverlay";
 import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator";
-import SettingsModal from "@/components/SettingsModal";
 import { Button } from "@/components/ui/button";
 
-import { generateWithGroq, getApiKey } from "@/lib/groq";
+import { generateWithGroq } from "@/lib/groq";
 
 interface ROFTCOData {
   role: string;
@@ -94,22 +93,9 @@ const Index = () => {
     setRoftco(emptyRoftco);
     setIsRevealing(false);
 
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      setStatus("warning");
-      toast({
-        title: "NO API KEY",
-        description: "Open Settings (⚙) to add your Groq API key. Get one free at console.groq.com",
-      });
-      setIsProcessing(false);
-      setTimeout(() => setStatus("ready"), 2000);
-      return;
-    }
-
     try {
-      console.log("J.A.R.V.I.S. Engine: API Key detected");
       console.log("J.A.R.V.I.S. Engine: Connecting to Groq...");
-      const result = await generateWithGroq(input, apiKey);
+      const result = await generateWithGroq(input);
       console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);
@@ -216,7 +202,6 @@ const Index = () => {
             <h1 className="font-mono-hud text-foreground text-sm tracking-[0.3em] uppercase">
               J.A.R.V.I.S.
             </h1>
-            <SettingsModal />
           </div>
           <StatusIndicator status={status} />
         </header>
