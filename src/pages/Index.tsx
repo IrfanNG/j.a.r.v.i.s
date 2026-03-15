@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Zap, Terminal } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
