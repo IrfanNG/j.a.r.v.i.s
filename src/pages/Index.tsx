@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Zap, Terminal } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -7,7 +7,7 @@ import ArcReactorSpinner from "@/components/ArcReactorSpinner";
 import ScanLineOverlay from "@/components/ScanLineOverlay";
 import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { generateMockROFTCO } from "@/lib/mock-roftco";
 
 interface ROFTCOData {
   role: string;
@@ -46,13 +46,13 @@ const Index = () => {
   const [showFlash, setShowFlash] = useState(false);
 
   // Boot sequence
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       setStatus("ready");
       setBooted(true);
     }, 2000);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   const handleGenerate = useCallback(async () => {
     if (!input.trim() || isProcessing) return;
@@ -63,13 +63,7 @@ const Index = () => {
     setIsRevealing(false);
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-roftco", {
-        body: { message: input },
-      });
-
-      if (error) throw error;
-
-      const result = data as ROFTCOData;
+      const result = await generateMockROFTCO(input);
       setRoftco(result);
       setIsRevealing(true);
       setStatus("complete");
