@@ -52,6 +52,10 @@ const Index = () => {
     const timer = setTimeout(() => {
       setStatus("ready");
       setBooted(true);
+      toast({
+        title: "J.A.R.V.I.S. ONLINE",
+        description: "Neural engine connected. System ready for input.",
+      });
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
