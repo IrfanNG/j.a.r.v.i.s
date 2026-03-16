@@ -1,4 +1,11 @@
 import { motion } from "framer-motion";
+import { GLOSSARY_DATA } from "@/lib/glossary-data";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface HUDCardProps {
   label: string;
@@ -9,6 +16,42 @@ interface HUDCardProps {
 
 const HUDCard = ({ label, content, index, isRevealing }: HUDCardProps) => {
   const hasContent = content && content.trim().length > 0;
+
+  const renderContent = (text: string) => {
+    if (!text) return <span className="text-muted-foreground italic">— awaiting data —</span>;
+
+    // Create a regex to find glossary terms (case-insensitive)
+    const terms = GLOSSARY_DATA.map(g => g.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+    const regex = new RegExp(`(${terms})`, 'gi');
+    
+    const parts = text.split(regex);
+
+    return parts.map((part, i) => {
+      const glossaryItem = GLOSSARY_DATA.find(
+        g => g.term.toLowerCase() === part.toLowerCase()
+      );
+
+      if (glossaryItem) {
+        return (
+          <Tooltip key={i}>
+            <TooltipTrigger asChild>
+              <span className="cursor-help border-b border-dotted border-foreground/50 text-foreground hover:text-cyan-400 transition-colors">
+                {part}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent className="bg-card border-foreground/20 text-foreground px-3 py-2 max-w-[200px]">
+              <div className="flex flex-col gap-1">
+                <span className="font-mono-hud text-[10px] uppercase text-foreground/40">{glossaryItem.category}</span>
+                <p className="text-xs leading-relaxed">{glossaryItem.definition}</p>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -35,7 +78,7 @@ const HUDCard = ({ label, content, index, isRevealing }: HUDCardProps) => {
         {isRevealing ? (
           <TypewriterText text={content} />
         ) : (
-          content || <span className="text-muted-foreground italic">— awaiting data —</span>
+          renderContent(content)
         )}
       </div>
     </motion.div>
