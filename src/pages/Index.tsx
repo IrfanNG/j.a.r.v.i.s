@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { generateWithGroq } from "@/lib/groq";
 import { ROFTCOData } from "@/lib/mock-roftco";
 import HUDCard from "@/components/HUDCard";
-import TypewriterText from "@/components/TypewriterText";
+import TypewriterText from "../components/TypewriterText";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
