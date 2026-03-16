@@ -7,11 +7,19 @@ interface SEOProps {
   url?: string;
 }
 
+const SEO_METADATA = {
+  title: "J.A.R.V.I.S. | Ultimate AI Vibe-Coding Co-Pilot",
+  description: "Turn messy ideas into production-grade prompts. J.A.R.V.I.S. is the elite architect for Lovable, v0, Cursor, and Bolt.",
+  url: "https://j-a-r-v-i-s-brown.vercel.app",
+  author: "IrfanNG",
+  image: "https://j-a-r-v-i-s-brown.vercel.app/seo-thumb.png"
+};
+
 const SEO = ({
-  title = "J.A.R.V.I.S. | Ultimate AI Vibe-Coding Co-Pilot",
-  description = "Turn messy ideas into production-grade prompts. J.A.R.V.I.S. is the elite architect for Lovable, v0, Cursor, and Bolt.",
-  ogImage = "/seo-thumb.png",
-  url = "https://j-a-r-v-i.vercel.app", // Fallback URL
+  title = SEO_METADATA.title,
+  description = SEO_METADATA.description,
+  ogImage = SEO_METADATA.image,
+  url = SEO_METADATA.url, // Official Production Domain
 }: SEOProps) => {
   useEffect(() => {
     // Update Document Title
