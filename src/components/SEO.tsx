@@ -9,9 +9,9 @@ interface SEOProps {
 
 const SEO = ({
   title = "J.A.R.V.I.S. | Ultimate AI Vibe-Coding Co-Pilot",
-  description = "Turn your messy ideas into production-grade prompts. J.A.R.V.I.S. is the elite architect for vibe-coders using Lovable, v0, Cursor, and Bolt.",
-  ogImage = "https://jarvis-vibe.vercel.app/banner.png",
-  url = "https://jarvis-vibe.vercel.app",
+  description = "Turn messy ideas into production-grade prompts. J.A.R.V.I.S. is the elite architect for Lovable, v0, Cursor, and Bolt.",
+  ogImage = "/seo-thumb.png",
+  url = "https://j-a-r-v-i.vercel.app", // Fallback URL
 }: SEOProps) => {
   useEffect(() => {
     // Update Document Title
