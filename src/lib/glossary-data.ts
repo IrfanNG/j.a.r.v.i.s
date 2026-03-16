@@ -7,112 +7,112 @@ export interface GlossaryTerm {
 export const GLOSSARY_DATA: GlossaryTerm[] = [
   {
     term: "Next.js",
-    definition: "Framework React yang sangat laju, sesuai untuk SEO dan web app modern.",
+    definition: "A high-performance React framework optimized for SEO and modern web applications.",
     category: "frontend"
   },
   {
     term: "React Native",
-    definition: "Guna JavaScript untuk bina app telefon (Android & iOS) serentak.",
+    definition: "Build native mobile apps (Android & iOS) simultaneously using JavaScript and React.",
     category: "frontend"
   },
   {
     term: "Tailwind CSS",
-    definition: "Cara styling web paling cepat guna class-class sedia ada (Utility-first).",
+    definition: "A utility-first CSS framework for rapid UI development without leaving your HTML.",
     category: "frontend"
   },
   {
     term: "Supabase",
-    definition: "Database open-source yang sangat senang, siap dengan sistem login (Auth).",
+    definition: "An open-source Firebase alternative providing a real-time database and Auth out of the box.",
     category: "backend"
   },
   {
     term: "REST API",
-    definition: "Cara sistem berhubung antara satu sama lain guna cara standard (HTTP).",
+    definition: "A standardized architectural style for networked applications to communicate via HTTP.",
     category: "api"
   },
   {
     term: "MongoDB",
-    definition: "Database jenis NoSQL yang fleksibel, sesuai untuk simpan data complex.",
+    definition: "A flexible NoSQL database designed for scalability and handling complex data structures.",
     category: "database"
   },
   {
     term: "PostgreSQL",
-    definition: "Database standard industri yang sangat power untuk data yang tersusun.",
+    definition: "The industry-standard relational database, known for reliability and robust data integrity.",
     category: "database"
   },
   {
     term: "Node.js",
-    definition: "Guna JavaScript untuk buat server (backend).",
+    definition: "A JavaScript runtime built on Chrome's V8 engine for building scalable server-side applications.",
     category: "backend"
   },
   {
     term: "FastAPI",
-    definition: "Framework Python yang sangat laju untuk bina API.",
+    definition: "A modern, high-performance web framework for building APIs with Python.",
     category: "api"
   },
   {
     term: "Shadcn UI",
-    definition: "Koleksi component cantik yang boleh copy-paste masuk project.",
+    definition: "Beautifully designed, accessible components that you can copy and paste into your apps.",
     category: "frontend"
   },
   {
     term: "Auth",
-    definition: "Singkatan Authentication, sistem untuk login dan identiti user.",
+    definition: "Short for Authentication; the process of verifying a user's identity and managing sessions.",
     category: "general"
   },
   {
     term: "SEO",
-    definition: "Search Engine Optimization - supaya web senang jumpa kat Google.",
+    definition: "Search Engine Optimization – techniques to improve visibility on search engines like Google.",
     category: "general"
   },
   {
     term: "Real-time",
-    definition: "Data update sekelip mata (macam chat WhatsApp).",
+    definition: "Instantaneous data updates often achieved via WebSockets (e.g., live chat or live feeds).",
     category: "general"
   },
   {
     term: "Dashboard",
-    definition: "Muka depan app untuk monitor data secara visual.",
+    definition: "An administrative interface for monitoring data and managing system operations.",
     category: "frontend"
   },
   {
     term: "Flutter",
-    definition: "Framework dari Google untuk bina app cantik untuk semua skrin.",
+    definition: "Google's UI toolkit for building natively compiled applications for mobile, web, and desktop.",
     category: "frontend"
   },
   {
     term: "Stripe",
-    definition: "Sistem payment online yang paling popular dan secure.",
+    definition: "A secure and developer-friendly online payment processing system.",
     category: "api"
   },
   {
     term: "Firebase",
-    definition: "Platform dari Google untuk permudahkan buat app mobile/web.",
+    definition: "Google's platform for rapid mobile and web application development.",
     category: "backend"
   },
   {
     term: "Astro",
-    definition: "Framework web yang sangat ringan dan laju, fokus pada content.",
+    definition: "A modern web framework focusing on content-driven websites with minimal client-side JS.",
     category: "frontend"
   },
   {
     term: "Unity",
-    definition: "Engine game paling popular untuk buat game 2D dan 3D.",
+    definition: "The world's leading real-time 3D development platform for games and interactive experiences.",
     category: "general"
   },
   {
     term: "Redis",
-    definition: "Penyimpanan data super-laju dalam memori, selalunya untuk caching.",
+    definition: "An ultra-fast, in-memory data store frequently used as a database, cache, and message broker.",
     category: "database"
   },
   {
     term: "Docker",
-    definition: "Teknologi untuk 'bungkus' app supaya boleh run kat mana-mana server dengan stabil.",
+    definition: "A platform for containerizing applications to ensure consistency across different environments.",
     category: "general"
   },
   {
     term: "TypeScript",
-    definition: "Versi JavaScript yang lebih 'strict' dan selamat untuk elak bug.",
+    definition: "A strict syntactical superset of JavaScript that adds static typing for better developer productivity.",
     category: "general"
   }
 ];

@@ -45,26 +45,26 @@ const WIZARD_STEPS = [
   {
     id: "idea",
     title: "The Core Idea",
-    question: "Apa masalah yang ipan nak selesaikan? (The 'What')",
-    placeholder: "e.g. App jual nasi lemak level kayangan..."
+    question: "What problem are you trying to solve? (The 'What')",
+    placeholder: "e.g. A premium delivery platform for local artisans..."
   },
   {
     id: "audience",
     title: "Target Audience",
-    question: "Siapa yang akan guna app ni? (The 'Who')",
-    placeholder: "e.g. Student UniKL, orang ofis, atau makcik kantin..."
+    question: "Who is the primary audience for this application? (The 'Who')",
+    placeholder: "e.g. University students, remote professionals, or small business owners..."
   },
   {
     id: "vibe",
     title: "Design Vibe",
-    question: "Vibe app ni nak macam mana? (The 'Style')",
-    placeholder: "e.g. Minimalist, dark mode cyberpunk, atau bento-box clean..."
+    question: "How should the application look and feel? (The 'Style')",
+    placeholder: "e.g. Minimalist, cyberpunk dark mode, or clean Apple-like aesthetic..."
   },
   {
     id: "features",
     title: "Key Features",
-    question: "Ada feature spesifik yang wajib ada? (The 'Must-haves')",
-    placeholder: "e.g. Login guna IC, payment gateway, atau map real-time..."
+    question: "Are there any specific 'must-have' features? (The 'Must-haves')",
+    placeholder: "e.g. Biometric auth, real-time inventory, or multi-currency support..."
   }
 ];
 
@@ -80,10 +80,10 @@ const Index = () => {
   const [ghostIndex, setGhostIndex] = useState(0);
 
   const GHOST_TEXTS = useMemo(() => [
-    "App jual nasi lemak...",
-    "System inventory warehouse...",
-    "Borang kehadiran pelajar...",
-    "UniKL student house hunting app...",
+    "A premium boutique coffee marketplace...",
+    "Smart warehouse management system...",
+    "Automated university attendance portal...",
+    "Hyper-local delivery tracking app...",
   ], []);
 
   // Ghost text rotation
