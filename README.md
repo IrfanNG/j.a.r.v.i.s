@@ -1,73 +1,87 @@
-# Welcome to your Lovable project
+<div align="center">
+  <img src="./public/banner.png" alt="J.A.R.V.I.S. Banner" width="100%" />
+  <h1>🤖 J.A.R.V.I.S.</h1>
+  <h3><i>"Just A Reliable Vibe-coding Intelligent System"</i></h3>
+  <p>The ultimate co-pilot for vibe-coders. From <b>Zero</b> to <b>Pro</b> in a single neural protocol.</p>
 
-## Project info
+  <p>
+    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+    <img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" />
+  </p>
+</div>
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🔥 What is J.A.R.V.I.S.?
 
-There are several ways of editing your application.
+J.A.R.V.I.S. was built to solve the biggest problem for new coders: **"I have an idea, but I don't know how to prompt the AI."** 
 
-**Use Lovable**
+This application bridges the gap between your messy thoughts and the "perfect prompt" needed by elite AI coding tools. 
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## ✨ Key Protocols
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🪄 Guided Wizard Mode
+Struggling to write a technical brain dump? Transition to **Wizard Mode**. J.A.R.V.I.S. will walk you through 4 high-context questions about your idea, audience, vibe, and features. 
 
-**Use your preferred IDE**
+### 🌌 Universal Agentic Instructions
+J.A.R.V.I.S. doesn't just format your text; it injects **secret neural instructions** optimized for:
+- **Lovable** (Architecture & Shadcn)
+- **v0** (Silk UI & High-Fidelity)
+- **Cursor** (Logic & Composer)
+- **Bolt** (Fullstack & Database)
+- **Antigravity** (Architectural Research & Premium Implementation)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📚 Noob-to-Pro Glossary
+Encountered words like "Next.js" or "REST API" and felt lost? J.A.R.V.I.S. highlights technical jargon in your output. Just hover over the term to see a simple, easy-to-understand explanation in **Rojak (Malay/English)**.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### ⌨️ Neural UX & Speed
+- **Keyboard Triggers**: Just hit `Enter` to move steps or initiate protocols.
+- **HUD Interface**: Futuristic corner-accented cards and type-writer effects.
+- **Silk Transitions**: Smooth animations built with Framer Motion.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🛠️ Technical Setup
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. **Clone & Install**:
+   ```bash
+   git clone https://github.com/IrfanNG/j.a.r.v.i.s.git
+   cd j.a.r.v.i.s
+   npm install
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2. **Neural Core Configuration**:
+   Create a `.env` file in the root and add your Groq API Key:
+   ```env
+   VITE_GROQ_API_KEY=your_key_here
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+3. **Ignite**:
+   ```bash
+   npm run dev
+   ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🏯 Professional Workflow
 
-**Use GitHub Codespaces**
+This project follows a strict **main/develop/feature** branching strategy.
+- **`main`**: 🏯 Production environment. Only stable releases.
+- **`develop`**: 🛠️ Staging area for feature integration.
+- **`feature/*`**: 🧪 Collaborative lab for new protocols.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🤝 Contribution
 
-This project is built with:
+Feel free to fork and suggest new "jargon" for the dictionary or better "secret sauces" for the prompt engine.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+*Built with ❤️ for every Zero-Experience Vibe Coder out there.*
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+<div align="center">
+  <p>J.A.R.V.I.S. is ready for deployment. Neural engine connected.</p>
+</div>
