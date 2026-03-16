@@ -37,9 +37,39 @@ const emptyRoftco: ROFTCOData = {
   outputFormat: "",
 };
 
+const WIZARD_STEPS = [
+  {
+    id: "idea",
+    title: "The Core Idea",
+    question: "Apa masalah yang ipan nak selesaikan? (The 'What')",
+    placeholder: "e.g. App jual nasi lemak level kayangan..."
+  },
+  {
+    id: "audience",
+    title: "Target Audience",
+    question: "Siapa yang akan guna app ni? (The 'Who')",
+    placeholder: "e.g. Student UniKL, orang ofis, atau makcik kantin..."
+  },
+  {
+    id: "vibe",
+    title: "Design Vibe",
+    question: "Vibe app ni nak macam mana? (The 'Style')",
+    placeholder: "e.g. Minimalist, dark mode cyberpunk, atau bento-box clean..."
+  },
+  {
+    id: "features",
+    title: "Key Features",
+    question: "Ada feature spesifik yang wajib ada? (The 'Must-haves')",
+    placeholder: "e.g. Login guna IC, payment gateway, atau map real-time..."
+  }
+];
+
 const Index = () => {
   const [status, setStatus] = useState<SystemStatus>("booting");
+  const [inputMode, setInputMode] = useState<"terminal" | "wizard">("terminal");
   const [input, setInput] = useState("");
+  const [wizardStep, setWizardStep] = useState(0);
+  const [wizardAnswers, setWizardAnswers] = useState<Record<string, string>>({});
   const [roftco, setRoftco] = useState<ROFTCOData>(emptyRoftco);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
@@ -76,9 +106,18 @@ const Index = () => {
   }, [GHOST_TEXTS.length]);
 
   const handleGenerate = useCallback(async () => {
-    if (!input.trim() || isProcessing) return;
+    const finalInput = inputMode === "terminal" 
+      ? input 
+      : `
+        CORE IDEA: ${wizardAnswers.idea}
+        TARGET AUDIENCE: ${wizardAnswers.audience}
+        DESIGN VIBE: ${wizardAnswers.vibe}
+        SPECIFIC FEATURES: ${wizardAnswers.features}
+      `.trim();
 
-    if (input.trim().length < 10) {
+    if (!finalInput.trim() || isProcessing) return;
+
+    if (finalInput.trim().length < 10) {
       setStatus("warning");
       toast({
         title: "SYSTEM WARNING",
@@ -95,7 +134,7 @@ const Index = () => {
 
     try {
       console.log("J.A.R.V.I.S. Engine: Connecting to Groq...");
-      const result = await generateWithGroq(input);
+      const result = await generateWithGroq(finalInput);
       console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);
@@ -117,7 +156,8 @@ const Index = () => {
     } finally {
       setIsProcessing(false);
     }
-  }, [input, isProcessing]);
+  }, [input, inputMode, wizardAnswers, isProcessing]);
+
 
   const handleCopy = useCallback(() => {
     const hasContent = Object.values(roftco).some((v) => v.trim());
@@ -216,42 +256,165 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Brain dump input */}
+        {/* Mode Toggle */}
+        <div className="flex gap-2 mb-6">
+          <Button
+            onClick={() => setInputMode("terminal")}
+            disabled={isProcessing}
+            className={`font-mono-hud text-[10px] tracking-[0.2em] px-4 py-1 h-auto transition-all ${
+              inputMode === "terminal" 
+                ? "bg-foreground text-background" 
+                : "bg-background text-foreground/40 border border-border"
+            }`}
+          >
+            Terminal Mode
+          </Button>
+          <Button
+            onClick={() => setInputMode("wizard")}
+            disabled={isProcessing}
+            className={`font-mono-hud text-[10px] tracking-[0.2em] px-4 py-1 h-auto transition-all ${
+              inputMode === "wizard" 
+                ? "bg-foreground text-background" 
+                : "bg-background text-foreground/40 border border-border"
+            }`}
+          >
+            Wizard Mode
+          </Button>
+        </div>
+
+        {/* Dynamic Input Section */}
         <div className="mb-6">
-          <label className="font-mono-hud text-xs tracking-[0.2em] uppercase text-foreground/50 mb-2 block">
-            Brain Dump Terminal
-          </label>
-          <div className="relative">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder=""
-              className="w-full min-h-[180px] bg-card border border-border text-foreground font-body text-sm p-4 resize-none
-                placeholder:text-muted-foreground placeholder:font-mono-hud placeholder:text-xs placeholder:tracking-wider
-                focus:outline-none focus:border-foreground focus:border-glow-cyan transition-all duration-300"
-              disabled={isProcessing}
-            />
-            {/* Ghost text */}
-            {!input && (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={ghostIndex}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute top-4 left-4 pointer-events-none font-mono-hud text-xs tracking-wider text-muted-foreground"
-                >
-                  {GHOST_TEXTS[ghostIndex]}
-                </motion.div>
-              </AnimatePresence>
+          <AnimatePresence mode="wait">
+            {inputMode === "terminal" ? (
+              <motion.div
+                key="terminal"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <label className="font-mono-hud text-xs tracking-[0.2em] uppercase text-foreground/50 mb-2 block">
+                  Brain Dump Terminal
+                </label>
+                <div className="relative">
+                  <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleGenerate();
+                      }
+                    }}
+                    placeholder=""
+                    className="w-full min-h-[180px] bg-card border border-border text-foreground font-body text-sm p-4 resize-none
+                      placeholder:text-muted-foreground placeholder:font-mono-hud placeholder:text-xs placeholder:tracking-wider
+                      focus:outline-none focus:border-foreground focus:border-glow-cyan transition-all duration-300"
+                    disabled={isProcessing}
+                  />
+                  {!input && (
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={ghostIndex}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.4 }}
+                        className="absolute top-4 left-4 pointer-events-none font-mono-hud text-xs tracking-wider text-muted-foreground"
+                      >
+                        {GHOST_TEXTS[ghostIndex]}
+                      </motion.div>
+                    </AnimatePresence>
+                  )}
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-foreground/50 pointer-events-none" />
+                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-foreground/50 pointer-events-none" />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="wizard"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-card border border-border p-6 relative overflow-hidden"
+              >
+                {/* Progress bar */}
+                <div className="absolute top-0 left-0 h-1 bg-foreground/10 w-full">
+                  <motion.div 
+                    className="h-full bg-foreground"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${((wizardStep + 1) / WIZARD_STEPS.length) * 100}%` }}
+                  />
+                </div>
+
+                <div className="mb-4 flex items-center justify-between">
+                  <span className="font-mono-hud text-[10px] tracking-[0.3em] text-foreground/30 uppercase">
+                    Step {wizardStep + 1} of {WIZARD_STEPS.length}: {WIZARD_STEPS[wizardStep].title}
+                  </span>
+                </div>
+
+                <h3 className="font-mono-hud text-sm tracking-wider text-foreground mb-4">
+                  {WIZARD_STEPS[wizardStep].question}
+                </h3>
+
+                <textarea
+                  value={wizardAnswers[WIZARD_STEPS[wizardStep].id] || ""}
+                  onChange={(e) => setWizardAnswers(prev => ({ ...prev, [WIZARD_STEPS[wizardStep].id]: e.target.value }))}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      if (wizardStep < WIZARD_STEPS.length - 1) {
+                        if (wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim()) {
+                          e.preventDefault();
+                          setWizardStep(s => s + 1);
+                        }
+                      } else {
+                        if (wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim()) {
+                          e.preventDefault();
+                          handleGenerate();
+                        }
+                      }
+                    }
+                  }}
+                  placeholder={WIZARD_STEPS[wizardStep].placeholder}
+                  className="w-full min-h-[120px] bg-background/50 border border-border/50 text-foreground font-body text-sm p-4 resize-none
+                    focus:outline-none focus:border-foreground transition-all duration-300"
+                  disabled={isProcessing}
+                />
+
+                <div className="mt-6 flex justify-between">
+                  <Button
+                    onClick={() => setWizardStep(s => Math.max(0, s - 1))}
+                    disabled={wizardStep === 0 || isProcessing}
+                    className="font-mono-hud text-[10px] tracking-[0.2em] bg-transparent text-foreground/40 hover:text-foreground border-none"
+                  >
+                    Back
+                  </Button>
+                  
+                  {wizardStep < WIZARD_STEPS.length - 1 ? (
+                    <Button
+                      onClick={() => setWizardStep(s => s + 1)}
+                      disabled={isProcessing || !(wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())}
+                      className="font-mono-hud text-[10px] tracking-[0.2em] bg-foreground text-background px-6"
+                    >
+                      Next Step
+                    </Button>
+                  ) : (
+                    <div className="w-20" /> /* Placeholder to keep layout */
+                  )}
+                </div>
+                
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-foreground/50 pointer-events-none" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-foreground/50 pointer-events-none" />
+              </motion.div>
             )}
-            {/* Corner accents on textarea */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-foreground/50 pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-foreground/50 pointer-events-none" />
-          </div>
+          </AnimatePresence>
         </div>
 
         {/* Generate button */}
@@ -266,10 +429,17 @@ const Index = () => {
           ) : (
             <Button
               onClick={handleGenerate}
-              disabled={!input.trim()}
+              disabled={
+                inputMode === "terminal" 
+                  ? !input.trim() 
+                  : wizardStep !== WIZARD_STEPS.length - 1 || !(wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())
+              }
               className={`bg-primary hover:bg-primary/90 text-primary-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
                 px-8 py-3 h-auto border border-primary/50 hover:border-glow-red transition-all duration-300
-                disabled:opacity-30 disabled:cursor-not-allowed ${input.trim() ? "animate-pulse-glow" : ""}`}
+                disabled:opacity-30 disabled:cursor-not-allowed ${
+                  (inputMode === "terminal" ? input.trim() : (wizardStep === WIZARD_STEPS.length - 1 && wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())) 
+                  ? "animate-pulse-glow" : ""
+                }`}
             >
               <Zap className="w-4 h-4 mr-2" />
               Initiate Protocol

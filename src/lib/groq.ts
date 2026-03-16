@@ -22,6 +22,9 @@ RULES — follow every one precisely:
 
 4. TECH STACK (Tailored, Never Generic):
    - Do NOT default to "Next.js + Supabase + Tailwind" for everything.
+   - Always provide the tech stack as a bulleted list prefixed with "•".
+   - Each item must include the technology name and a 1-sentence technical justification.
+   - Example: "• Supabase - For real-time database syncing and easy auth management."
    - Match the stack to the project type:
      • Simple landing page or portfolio → Astro, HTML/CSS/JS, or Hugo
      • Mobile app → React Native, Flutter, or Swift/Kotlin
@@ -98,7 +101,12 @@ export async function generateWithGroq(
 
   const str = (val: unknown): string => {
     if (typeof val === "string") {
-      return val.replace(/•\s*•/g, "•").trim();
+      // If it looks like a list but is missing bullets, we should trust the AI prompt fix
+      // But we can clean up common messiness
+      return val
+        .replace(/•\s*•/g, "•")
+        .replace(/^\s*[\-\*]\s/gm, "• ") // Convert - or * to •
+        .trim();
     }
     if (Array.isArray(val)) {
       return val
