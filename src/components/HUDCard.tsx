@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import TypewriterText from "@/components/TypewriterText";
 
 interface HUDCardProps {
   label: string;
@@ -82,27 +83,6 @@ const HUDCard = ({ label, content, index, isRevealing }: HUDCardProps) => {
         )}
       </div>
     </motion.div>
-  );
-};
-
-const TypewriterText = ({ text }: { text: string }) => {
-  return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: i * 0.015, duration: 0.05 }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.span>
   );
 };
 

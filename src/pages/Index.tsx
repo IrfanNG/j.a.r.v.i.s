@@ -1,23 +1,27 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Zap, Terminal } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import HUDCard from "@/components/HUDCard";
-import ArcReactorSpinner from "@/components/ArcReactorSpinner";
-import ScanLineOverlay from "@/components/ScanLineOverlay";
-import StatusIndicator, { type SystemStatus } from "@/components/StatusIndicator";
-import { Button } from "@/components/ui/button";
-
 import { generateWithGroq } from "@/lib/groq";
-
-interface ROFTCOData {
-  role: string;
-  objective: string;
-  features: string;
-  techStack: string;
-  constraint: string;
-  outputFormat: string;
-}
+import { ROFTCOData } from "@/lib/mock-roftco";
+import HUDCard from "@/components/HUDCard";
+import TypewriterText from "@/components/TypewriterText";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Terminal,
+  Cpu,
+  Sparkles,
+  Copy,
+  Check,
+  Zap,
+  ShieldCheck,
+  ArrowRight,
+  ArrowLeft,
+  Wand2,
+  ChevronRight,
+  Globe
+} from "lucide-react";
+import { toast } from "sonner";
+import SEO from "@/components/SEO";
 
 const ROFTCO_LABELS = [
   { key: "role", label: "Role" },
@@ -65,7 +69,6 @@ const WIZARD_STEPS = [
 ];
 
 const Index = () => {
-  const [status, setStatus] = useState<SystemStatus>("booting");
   const [inputMode, setInputMode] = useState<"terminal" | "wizard">("terminal");
   const [input, setInput] = useState("");
   const [wizardStep, setWizardStep] = useState(0);
@@ -73,41 +76,27 @@ const Index = () => {
   const [roftco, setRoftco] = useState<ROFTCOData>(emptyRoftco);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
-  const [booted, setBooted] = useState(false);
-  const [showFlash, setShowFlash] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const [ghostIndex, setGhostIndex] = useState(0);
 
   const GHOST_TEXTS = useMemo(() => [
     "App jual nasi lemak...",
-    "UniKL student house hunting app...",
-    "Travel planner for Cuti-Cuti Malaysia...",
+    "System inventory warehouse...",
     "Borang kehadiran pelajar...",
+    "UniKL student house hunting app...",
   ], []);
-
-  // Boot sequence
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setStatus("ready");
-      setBooted(true);
-      toast({
-        title: "J.A.R.V.I.S. ONLINE",
-        description: "Neural engine connected. System ready for input.",
-      });
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Ghost text rotation
   useEffect(() => {
     const interval = setInterval(() => {
       setGhostIndex((i) => (i + 1) % GHOST_TEXTS.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [GHOST_TEXTS.length]);
 
   const handleGenerate = useCallback(async () => {
-    const finalInput = inputMode === "terminal" 
-      ? input 
+    const finalInput = inputMode === "terminal"
+      ? input
       : `
         CORE IDEA: ${wizardAnswers.idea}
         TARGET AUDIENCE: ${wizardAnswers.audience}
@@ -118,46 +107,35 @@ const Index = () => {
     if (!finalInput.trim() || isProcessing) return;
 
     if (finalInput.trim().length < 10) {
-      setStatus("warning");
-      toast({
-        title: "SYSTEM WARNING",
-        description: "Input too short. Provide more detail for accurate parsing.",
+      toast.warning("Input too short", {
+        description: "Provide more detail for accurate parsing.",
       });
-      setTimeout(() => setStatus("ready"), 2000);
       return;
     }
 
     setIsProcessing(true);
-    setStatus("processing");
     setRoftco(emptyRoftco);
     setIsRevealing(false);
 
     try {
-      console.log("J.A.R.V.I.S. Engine: Connecting to Groq...");
       const result = await generateWithGroq(finalInput);
-      console.log("J.A.R.V.I.S. Engine: Response received successfully");
       setRoftco(result);
       setIsRevealing(true);
-      setStatus("complete");
+      toast.success("Protocol Generated", {
+        description: "ROFTCO prompt successfully created.",
+      });
     } catch (err: any) {
-      console.error("J.A.R.V.I.S. Engine: Connection failed —", err.message);
-      setStatus("error");
-
       const statusCode = err?.status;
       const msg = err?.message || "Unknown error";
-
       if (statusCode === 429) {
-        toast({ title: "SYSTEM OVERHEAT", description: "Rate limit exceeded. Retry in a moment.", variant: "destructive" });
-      } else if (statusCode === 400 || statusCode === 401 || statusCode === 403) {
-        toast({ title: "ACCESS DENIED", description: msg, variant: "destructive" });
+        toast.error("SYSTEM OVERHEAT", { description: "Rate limit exceeded. Retry in a moment." });
       } else {
-        toast({ title: "SYSTEM ERROR", description: msg, variant: "destructive" });
+        toast.error("SYSTEM ERROR", { description: msg });
       }
     } finally {
       setIsProcessing(false);
     }
   }, [input, inputMode, wizardAnswers, isProcessing]);
-
 
   const handleCopy = useCallback(() => {
     const hasContent = Object.values(roftco).some((v) => v.trim());
@@ -177,11 +155,10 @@ const Index = () => {
     ).join("\n\n") + universalInstructions;
 
     navigator.clipboard.writeText(prompt);
-    setShowFlash(true);
-    setTimeout(() => setShowFlash(false), 400);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
 
-    toast({
-      title: "PROTOCOL DEPLOYED",
+    toast.info("PROTOCOL DEPLOYED", {
       description: "ROFTCO prompt copied to clipboard.",
     });
   }, [roftco]);
@@ -189,109 +166,67 @@ const Index = () => {
   const hasOutput = Object.values(roftco).some((v) => v.trim());
 
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      <ScanLineOverlay />
+    <div className="min-h-screen bg-background p-4 md:p-8 selection:bg-foreground selection:text-background flex flex-col items-center">
+      <SEO />
 
-      {/* Cyan flash overlay */}
-      <AnimatePresence>
-        {showFlash && (
-          <motion.div
-            initial={{ opacity: 0.5 }}
-            animate={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 bg-foreground/10 pointer-events-none"
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Boot sequence overlay */}
-      <AnimatePresence>
-        {!booted && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="fixed inset-0 z-50 bg-background flex items-center justify-center"
-          >
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0.3, 1] }}
-              transition={{ duration: 1.5 }}
-              className="text-center"
-            >
-              <div className="font-mono-hud text-foreground text-lg tracking-[0.4em] mb-4">
-                J.A.R.V.I.S.
-              </div>
-              <div className="font-mono-hud text-foreground/40 text-xs tracking-[0.2em]">
-                INITIALIZING SYSTEMS...
-              </div>
-              <motion.div
-                className="mt-6 h-px bg-foreground/30 mx-auto"
-                initial={{ width: 0 }}
-                animate={{ width: 200 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Main content */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: booted ? 1 : 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-8"
-      >
-        {/* Header */}
-        <header className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Terminal className="w-5 h-5 text-foreground" />
-            <h1 className="font-mono-hud text-foreground text-sm tracking-[0.3em] uppercase">
+      <header className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-foreground/10 pb-6 pt-safe">
+        <div className="flex items-center gap-3">
+          <div className="bg-foreground p-2 rounded-sm shadow-glow-cyan">
+            <Cpu className="w-6 h-6 text-background" />
+          </div>
+          <div>
+            <h1 className="font-mono-hud text-2xl tracking-[0.4em] uppercase text-foreground">
               J.A.R.V.I.S.
             </h1>
+            <p className="font-mono-hud text-[10px] text-foreground/40 tracking-widest mt-1">
+              Neural Network Interface v4.2.0-STABLE
+            </p>
           </div>
-          <StatusIndicator status={status} />
-        </header>
+        </div>
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="w-4 h-4 text-green-500" />
+          <span className="font-mono-hud text-xs tracking-[0.2em] text-green-500 uppercase">
+            System Online
+          </span>
+        </div>
+      </header>
 
-        {/* Subtitle */}
-        <div className="mb-8">
-          <p className="font-mono-hud text-foreground/30 text-xs tracking-[0.15em] uppercase">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="relative z-10 w-full max-w-6xl"
+      >
+        <div className="mb-8 text-center md:text-left">
+          <h2 className="font-mono-hud text-foreground/30 text-xs tracking-[0.15em] uppercase">
             Just A Reliable Vibe-coding Intelligent System
-          </p>
+          </h2>
           <p className="font-body text-foreground/50 text-sm mt-1">
             Dump your messy ideas below. I'll structure them into a proper ROFTCO prompt.
           </p>
         </div>
 
-        {/* Mode Toggle */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 justify-center md:justify-start">
           <Button
             onClick={() => setInputMode("terminal")}
             disabled={isProcessing}
             className={`font-mono-hud text-[10px] tracking-[0.2em] px-4 py-1 h-auto transition-all ${
-              inputMode === "terminal" 
-                ? "bg-foreground text-background" 
-                : "bg-background text-foreground/40 border border-border"
+              inputMode === "terminal" ? "bg-foreground text-background" : "bg-background text-foreground/40 border border-border"
             }`}
           >
-            Terminal Mode
+            <Terminal className="w-3 h-3 mr-2" /> Terminal Mode
           </Button>
           <Button
             onClick={() => setInputMode("wizard")}
             disabled={isProcessing}
             className={`font-mono-hud text-[10px] tracking-[0.2em] px-4 py-1 h-auto transition-all ${
-              inputMode === "wizard" 
-                ? "bg-foreground text-background" 
-                : "bg-background text-foreground/40 border border-border"
+              inputMode === "wizard" ? "bg-foreground text-background" : "bg-background text-foreground/40 border border-border"
             }`}
           >
-            Wizard Mode
+            <Wand2 className="w-3 h-3 mr-2" /> Wizard Mode
           </Button>
         </div>
 
-        {/* Dynamic Input Section */}
         <div className="mb-6">
           <AnimatePresence mode="wait">
             {inputMode === "terminal" ? (
@@ -300,47 +235,40 @@ const Index = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
+                className="relative"
               >
-                <label className="font-mono-hud text-xs tracking-[0.2em] uppercase text-foreground/50 mb-2 block">
+                <label htmlFor="terminal-input" className="font-mono-hud text-xs tracking-[0.2em] uppercase text-foreground/50 mb-2 block">
                   Brain Dump Terminal
                 </label>
-                <div className="relative">
-                  <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleGenerate();
-                      }
-                    }}
-                    placeholder=""
-                    className="w-full min-h-[180px] bg-card border border-border text-foreground font-body text-sm p-4 resize-none
-                      placeholder:text-muted-foreground placeholder:font-mono-hud placeholder:text-xs placeholder:tracking-wider
-                      focus:outline-none focus:border-foreground focus:border-glow-cyan transition-all duration-300"
-                    disabled={isProcessing}
-                  />
-                  {!input && (
+                <Textarea
+                  id="terminal-input"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleGenerate();
+                    }
+                  }}
+                  className="w-full min-h-[180px] bg-card border border-border text-foreground font-body text-sm p-4 resize-none
+                    focus:outline-none focus:border-foreground focus:border-glow-cyan transition-all duration-300"
+                  disabled={isProcessing}
+                />
+                {!input && (
+                  <div className="absolute top-12 left-4 pointer-events-none font-mono-hud text-xs tracking-wider text-muted-foreground opacity-50">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={ghostIndex}
-                        initial={{ opacity: 0, y: 6 }}
+                        initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.4 }}
-                        className="absolute top-4 left-4 pointer-events-none font-mono-hud text-xs tracking-wider text-muted-foreground"
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.5 }}
                       >
-                        {GHOST_TEXTS[ghostIndex]}
+                        <TypewriterText text={GHOST_TEXTS[ghostIndex]} />
                       </motion.div>
                     </AnimatePresence>
-                  )}
-                  {/* Corner accents */}
-                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
-                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-foreground/50 pointer-events-none" />
-                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-foreground/50 pointer-events-none" />
-                </div>
+                  </div>
+                )}
               </motion.div>
             ) : (
               <motion.div
@@ -348,33 +276,28 @@ const Index = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
                 className="bg-card border border-border p-6 relative overflow-hidden"
               >
-                {/* Progress bar */}
                 <div className="absolute top-0 left-0 h-1 bg-foreground/10 w-full">
-                  <motion.div 
+                  <motion.div
                     className="h-full bg-foreground"
                     initial={{ width: 0 }}
                     animate={{ width: `${((wizardStep + 1) / WIZARD_STEPS.length) * 100}%` }}
                   />
                 </div>
-
                 <div className="mb-4 flex items-center justify-between">
                   <span className="font-mono-hud text-[10px] tracking-[0.3em] text-foreground/30 uppercase">
                     Step {wizardStep + 1} of {WIZARD_STEPS.length}: {WIZARD_STEPS[wizardStep].title}
                   </span>
                 </div>
-
                 <h3 className="font-mono-hud text-sm tracking-wider text-foreground mb-4">
                   {WIZARD_STEPS[wizardStep].question}
                 </h3>
-
-                <textarea
+                <Textarea
                   value={wizardAnswers[WIZARD_STEPS[wizardStep].id] || ""}
                   onChange={(e) => setWizardAnswers(prev => ({ ...prev, [WIZARD_STEPS[wizardStep].id]: e.target.value }))}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === "Enter" && !e.shiftKey) {
                       if (wizardStep < WIZARD_STEPS.length - 1) {
                         if (wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim()) {
                           e.preventDefault();
@@ -393,44 +316,35 @@ const Index = () => {
                     focus:outline-none focus:border-foreground transition-all duration-300"
                   disabled={isProcessing}
                 />
-
                 <div className="mt-6 flex justify-between">
                   <Button
                     onClick={() => setWizardStep(s => Math.max(0, s - 1))}
                     disabled={wizardStep === 0 || isProcessing}
                     className="font-mono-hud text-[10px] tracking-[0.2em] bg-transparent text-foreground/40 hover:text-foreground border-none"
                   >
-                    Back
+                    <ArrowLeft className="w-3 h-3 mr-2" /> Back
                   </Button>
-                  
                   {wizardStep < WIZARD_STEPS.length - 1 ? (
                     <Button
                       onClick={() => setWizardStep(s => s + 1)}
                       disabled={isProcessing || !(wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())}
                       className="font-mono-hud text-[10px] tracking-[0.2em] bg-foreground text-background px-6"
                     >
-                      Next Step
+                      Next Step <ArrowRight className="w-3 h-3 ml-2" />
                     </Button>
                   ) : (
-                    <div className="w-20" /> /* Placeholder to keep layout */
+                    <div className="w-20" />
                   )}
                 </div>
-                
-                {/* Corner accents */}
-                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-foreground/50 pointer-events-none" />
-                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-foreground/50 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-foreground/50 pointer-events-none" />
-                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-foreground/50 pointer-events-none" />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Generate button */}
         <div className="flex items-center justify-center gap-4 mb-10">
           {isProcessing ? (
             <div className="flex items-center gap-4">
-              <ArcReactorSpinner size={48} />
+              <Sparkles className="w-6 h-6 text-foreground animate-pulse" />
               <span className="font-mono-hud text-xs tracking-[0.2em] text-foreground/60 uppercase">
                 Processing...
               </span>
@@ -439,24 +353,19 @@ const Index = () => {
             <Button
               onClick={handleGenerate}
               disabled={
-                inputMode === "terminal" 
-                  ? !input.trim() 
+                inputMode === "terminal"
+                  ? !input.trim()
                   : wizardStep !== WIZARD_STEPS.length - 1 || !(wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())
               }
               className={`bg-primary hover:bg-primary/90 text-primary-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
                 px-8 py-3 h-auto border border-primary/50 hover:border-glow-red transition-all duration-300
-                disabled:opacity-30 disabled:cursor-not-allowed ${
-                  (inputMode === "terminal" ? input.trim() : (wizardStep === WIZARD_STEPS.length - 1 && wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())) 
-                  ? "animate-pulse-glow" : ""
-                }`}
+                disabled:opacity-30 disabled:cursor-not-allowed`}
             >
-              <Zap className="w-4 h-4 mr-2" />
-              Initiate Protocol
+              <Zap className="w-4 h-4 mr-2" /> Initiate Protocol
             </Button>
           )}
         </div>
 
-        {/* ROFTCO Output Grid */}
         <AnimatePresence>
           {hasOutput && (
             <motion.div
@@ -464,14 +373,9 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-px flex-1 bg-border" />
-                <span className="font-mono-hud text-xs tracking-[0.3em] text-foreground/40 uppercase">
-                  ROFTCO Output
-                </span>
-                <div className="h-px flex-1 bg-border" />
-              </div>
-
+              <h2 className="font-mono-hud text-xs tracking-[0.3em] text-foreground/40 uppercase text-center mb-4">
+                ROFTCO Output
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 {ROFTCO_LABELS.map(({ key, label }, index) => (
                   <HUDCard
@@ -483,15 +387,13 @@ const Index = () => {
                   />
                 ))}
               </div>
-
-              {/* Deploy Protocol Button */}
               <div className="flex justify-center">
                 <Button
                   onClick={handleCopy}
                   className="bg-background hover:bg-card text-foreground font-mono-hud text-xs tracking-[0.2em] uppercase
                     px-8 py-3 h-auto border border-foreground/40 hover:border-foreground hover:border-glow-cyan transition-all duration-300"
                 >
-                  <Copy className="w-4 h-4 mr-2" />
+                  {copySuccess ? <Check className="w-4 h-4 mr-2 text-green-400" /> : <Copy className="w-4 h-4 mr-2" />}
                   Deploy Protocol
                 </Button>
               </div>
@@ -499,14 +401,33 @@ const Index = () => {
           )}
         </AnimatePresence>
 
-        {/* Footer */}
-        <footer className="mt-16 border-t border-border/30 pt-4 flex items-center justify-between">
-          <span className="font-mono-hud text-[10px] tracking-[0.2em] text-foreground/20 uppercase">
-            Stark Industries × KD x UniKL Builders
-          </span>
-          <span className="font-mono-hud text-[10px] tracking-[0.2em] text-foreground/20 uppercase">
-            v1.0.0-alpha
-          </span>
+        <section className="sr-only">
+          <h2>About J.A.R.V.I.S. - AI Vibe-Coding Assistant</h2>
+          <p>
+            J.A.R.V.I.S. (Just A Reliable Vibe-coding Intelligent System) turns messy ideas into structured, technical prompts optimized for Lovable, v0, Cursor, and Bolt.
+          </p>
+          <ul>
+            <li>Guided Wizard Mode</li>
+            <li>Universal Agentic Instructions</li>
+            <li>Technical Glossary</li>
+          </ul>
+        </section>
+
+        <footer className="w-full mt-12 py-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="font-mono-hud text-[10px] text-foreground/30 tracking-widest flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              SECURED CONNECTION
+            </div>
+            <div className="hidden md:block">|</div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-3 h-3" />
+              GLOBAL ACCESS
+            </div>
+          </div>
+          <div className="font-mono-hud text-[10px] text-foreground/30 tracking-widest uppercase text-center md:text-right">
+            © 2026 Stark Industries (Vibe Division)
+          </div>
         </footer>
       </motion.div>
     </div>
