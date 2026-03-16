@@ -163,9 +163,18 @@ const Index = () => {
     const hasContent = Object.values(roftco).some((v) => v.trim());
     if (!hasContent) return;
 
+    const universalInstructions = `
+
+## UNIVERSAL AGENTIC INSTRUCTIONS
+- You are an elite AI Solution Architect.
+- Execute deep architectural research before writing any code.
+- Priority: High-fidelity, premium aesthetics with rich gradients and micro-animations.
+- Structure: Modular, scalable directory structure with clean React hooks.
+- UX: Proactively handle edge cases, security protocols (PDPA/CORS), and mobile Safe Areas (pt-safe/pb-safe).`;
+
     const prompt = ROFTCO_LABELS.map(
       ({ key, label }) => `## ${label}\n${roftco[key] || "N/A"}`
-    ).join("\n\n");
+    ).join("\n\n") + universalInstructions;
 
     navigator.clipboard.writeText(prompt);
     setShowFlash(true);
