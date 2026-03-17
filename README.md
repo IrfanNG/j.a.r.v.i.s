@@ -21,6 +21,18 @@ J.A.R.V.I.S. was built to solve the biggest problem for new coders: **"I have an
 
 This application bridges the gap between your messy thoughts and the "perfect prompt" needed by elite AI coding tools. 
 
+## 🏗️ Tech Stack (The Neural Layers)
+
+J.A.R.V.I.S. 2.0 is powered by a high-performance stack for real-time intelligence and premium aesthetics:
+
+- **⚛️ Core**: [React 18](https://reactjs.org/) + [Vite](https://vitejs.dev/) + [TypeScript](https://www.typescriptlang.org/) (Type-safe neural logic)
+- **🎨 Styling**: [Tailwind CSS](https://tailwindcss.com/) (Glassmorphism, scanlines, and futuristic HUD overlays)
+- **✨ Animations**: [Framer Motion](https://www.framer.com/motion/) (3D Arc Reactor, typewriter effects, and silk transitions)
+- **🧠 Neural Engine**: [Groq SDK](https://groq.com/) + Llama-3/Gemma (Ultra-fast LLM inference)
+- **🛡️ UI Foundations**: [Radix UI](https://www.radix-ui.com/) + [Shadcn/UI](https://ui.shadcn.com/) (Premium accessible components)
+- **📡 Icons**: [Lucide React](https://lucide.dev/) (Stark-style iconography)
+- **🚀 Deployment**: [Vercel](https://vercel.com/) (Production-grade staging & edge delivery)
+
 ## ✨ Key Protocols
 
 ### 🪄 Guided Wizard Mode
