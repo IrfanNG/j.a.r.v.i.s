@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/tooltip";
 import TypewriterText from "@/components/TypewriterText";
 
+import { useState, useEffect } from "react";
+
 interface HUDCardProps {
   label: string;
   content: string;
@@ -15,8 +17,28 @@ interface HUDCardProps {
   isRevealing: boolean;
 }
 
+const ROFTCO_EXPLAINERS: Record<string, string> = {
+  "Role": "Defines the specific character, persona, or expertise the AI should adopt during the task.",
+  "Objective": "The primary goal or target outcome that needs to be achieved in this generation.",
+  "Features": "The specific functional requirements, components, or deliverables to be implemented.",
+  "Tech Stack": "The technical architecture, frameworks, and libraries to be used for development.",
+  "Constraint": "Design limits, performance requirements, or specific rules that must be followed.",
+  "Output Format": "The final structure, file type, or visual presentation of the generated content.",
+};
+
 const HUDCard = ({ label, content, index, isRevealing }: HUDCardProps) => {
+  const [isTyping, setIsTyping] = useState(false);
   const hasContent = content && content.trim().length > 0;
+
+  useEffect(() => {
+    if (isRevealing && hasContent) {
+      setIsTyping(true);
+      // Determine typing duration based on content length
+      const duration = Math.min(2000, content.length * 20); 
+      const timer = setTimeout(() => setIsTyping(false), duration);
+      return () => clearTimeout(timer);
+    }
+  }, [isRevealing, hasContent, content]);
 
   const renderContent = (text: string) => {
     if (!text) return <span className="text-muted-foreground italic">— awaiting data —</span>;
@@ -58,25 +80,36 @@ const HUDCard = ({ label, content, index, isRevealing }: HUDCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.15, duration: 0.5 }}
-      className={`relative border bg-card p-4 min-h-[140px] group transition-all duration-300 ${
-        hasContent ? "border-foreground/40 border-glow-cyan" : "border-border hover:border-glow-cyan"
+      className={`relative border p-4 min-h-[140px] group transition-all duration-300 backdrop-blur-md ${
+        hasContent ? "bg-black/60 border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.15)] bg-gradient-to-br from-cyan-900/10 to-transparent" : "bg-black/40 border-cyan-900/40 hover:border-cyan-500/50"
       }`}
     >
       {/* Corner brackets */}
-      <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-foreground" />
-      <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-foreground" />
-      <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-foreground" />
-      <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-foreground" />
+      <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-500/70" />
+      <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-500/70" />
+      <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-500/70" />
+      <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-500/70" />
 
       {/* Label */}
-      <div className="font-mono-hud text-xs tracking-[0.3em] uppercase text-foreground mb-3 flex items-center gap-2">
-        <span className="w-1.5 h-1.5 bg-foreground inline-block" />
-        {label}
-      </div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="font-mono-hud text-xs tracking-[0.3em] uppercase text-cyan-400 mb-3 flex items-center gap-2 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] cursor-help">
+              <span className="w-1.5 h-1.5 bg-cyan-400 inline-block shadow-[0_0_5px_rgba(34,211,238,1)]" />
+              {label}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="bg-black/90 border-cyan-500/50 text-cyan-100 px-3 py-2 max-w-[250px] backdrop-blur-md">
+            <p className="font-mono-hud text-[10px] tracking-wider leading-relaxed">
+              {ROFTCO_EXPLAINERS[label] || "Neural processing node."}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* Content */}
-      <div className="font-body text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
-        {isRevealing ? (
+      <div className="font-body text-sm text-cyan-50/80 leading-relaxed whitespace-pre-wrap">
+        {isTyping ? (
           <TypewriterText text={content} />
         ) : (
           renderContent(content)
