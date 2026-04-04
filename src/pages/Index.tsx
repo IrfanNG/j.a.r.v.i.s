@@ -155,9 +155,12 @@ const Index = () => {
 - Structure: Modular, scalable directory structure with clean React hooks.
 - UX: Proactively handle edge cases, security protocols (PDPA/CORS), and mobile Safe Areas (pt-safe/pb-safe).`;
 
-    const prompt = ROFTCO_LABELS.map(
-      ({ key, label }) => `## ${label}\n${roftco[key] || "N/A"}`
-    ).join("\n\n") + universalInstructions;
+    const keysToExclude: (keyof ROFTCOData)[] = []; // Exclude nothing if no specific keys are needed
+    const prompt = ROFTCO_LABELS.filter(
+      (item) => !keysToExclude.includes(item.key)
+    )
+      .map(({ key, label }) => `## ${label}\n${roftco[key] || "N/A"}`)
+      .join("\n\n") + universalInstructions;
 
     navigator.clipboard.writeText(prompt);
     setCopySuccess(true);
@@ -332,7 +335,7 @@ const Index = () => {
                       <Button
                         onClick={() => setWizardStep(s => s + 1)}
                         disabled={isProcessing || !(wizardAnswers[WIZARD_STEPS[wizardStep].id]?.trim())}
-                        className="font-mono-hud text-[10px] tracking-[0.2em] bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 hover:bg-cyan-500/30 hover:border-cyan-400 px-6 transition-all shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] disabled:opacity-50"
+                        className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-100 font-mono-hud text-xs tracking-[0.2em] uppercase px-8 py-4 h-auto border border-cyan-500/60 hover:border-cyan-300 hover:shadow-[0_0_10px_rgba(34,211,238,0.1)] hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] disabled:opacity-50"
                       >
                         Next Step <ArrowRight className="w-3 h-3 ml-2" />
                       </Button>

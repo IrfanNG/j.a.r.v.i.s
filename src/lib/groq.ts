@@ -17,42 +17,27 @@ RULES — follow every one precisely:
 3. FEATURES (Product Manager Expansion):
    - Do NOT just restate what the user typed. Act as a senior product manager.
    - Always include 5-8 features: the user's core idea PLUS 3-5 features they didn't mention but would critically need.
-   - Examples of expansion: if user says "Attendance App," add: "• NFC/QR code check-in scanning," "• Geo-fencing to verify physical presence," "• Automated weekly attendance reports for lecturers," "• Integration with Google Calendar for class schedules," "• Push notifications for absent students."
    - Each feature must be a bullet prefixed with "•" and be specific enough to implement.
 
 4. TECH STACK (Tailored, Never Generic):
    - Do NOT default to "Next.js + Supabase + Tailwind" for everything.
    - Always provide the tech stack as a bulleted list prefixed with "•".
    - Each item must include the technology name and a 1-sentence technical justification.
-   - Example: "• Supabase - For real-time database syncing and easy auth management."
-   - Match the stack to the project type:
-     • Simple landing page or portfolio → Astro, HTML/CSS/JS, or Hugo
-     • Mobile app → React Native, Flutter, or Swift/Kotlin
-     • Mobile game → Unity, Godot, or Phaser.js
-     • Real-time collaborative app → Elixir/Phoenix, Go, or Node.js with Socket.io/WebSockets
-     • Data-heavy/ML app → Python, FastAPI, PostgreSQL, Redis
-     • IoT project → MQTT, Arduino, Raspberry Pi, Node-RED
-     • E-commerce → Shopify SDK, Medusa.js, or WooCommerce
-   - Only suggest Next.js + Supabase + Tailwind if it genuinely fits (e.g., a SaaS dashboard or content platform).
-   - If the user explicitly requests a specific stack, respect their choice.
+   - Match the stack to the project type.
 
 5. CONSTRAINT (Project-Specific, Not Generic):
-   - Never use vague constraints like "ensure data security" or "follow best practices."
    - Generate 2-3 constraints that are specific to the project context. Examples:
-     • "Must function offline-first for rural Malaysian areas with limited connectivity"
-     • "Must handle 10,000 concurrent university students during peak registration"
-     • "Compliant with Malaysia's Personal Data Protection Act (PDPA) 2010"
-     • "Must support Bahasa Melayu and English bilingual UI"
-     • "Total hosting cost must remain under RM50/month"
-     • "Must load under 2 seconds on 3G mobile connections"
+     • "Must function offline-first for rural areas"
+     • "Must handle 10,000 concurrent users"
+     • "Compliant with Malaysia's PDPA 2010"
+     • "Must support Bahasa Melayu UI"
 
 6. OUTPUT FORMAT (Specific Deliverable):
-   - Never say generic "working web application."
-   - Specify the exact deliverable type: "Deployed PWA with service worker," "REST API with OpenAPI 3.0 spec," "Figma-to-code responsive prototype," "Docker-containerized microservice," "Published npm package," "TestFlight-ready iOS build," etc.
+   - Specify the exact deliverable type: "Deployed PWA with service worker," "REST API with OpenAPI 3.0 spec," "Figma-to-code responsive prototype," etc.
 
 7. LANGUAGE TRANSFORMATION:
-   - All Malay, Rojak, or Manglish input MUST be converted to professional English technical language in every field.
-   - Maintain technical precision — "borang" → "form," "hantar" → "submit/deploy," "kedai" → "storefront/marketplace."
+    - All Malay, Rojak, or Manglish input MUST be converted to professional English technical language in every field.
+    - Maintain technical precision — "borang" → "form," "hantar" → "submit/deploy," "kedai" → "storefront/marketplace."
 
 Be bold, creative, and deeply technical. Every ROFTCO output should feel like it was written by a world-class consultant, not a template engine.`;
 
@@ -101,12 +86,7 @@ export async function generateWithGroq(
 
   const str = (val: unknown): string => {
     if (typeof val === "string") {
-      // If it looks like a list but is missing bullets, we should trust the AI prompt fix
-      // But we can clean up common messiness
-      return val
-        .replace(/•\s*•/g, "•")
-        .replace(/^\s*[\-\*]\s/gm, "• ") // Convert - or * to •
-        .trim();
+      return val.trim();
     }
     if (Array.isArray(val)) {
       return val
@@ -116,25 +96,25 @@ export async function generateWithGroq(
         })
         .join("\n");
     }
-    if (val && typeof val === "object") {
-      const obj = val as Record<string, unknown>;
-      const textKeys = ["description", "text", "summary", "content", "value"];
-      for (const k of textKeys) {
-        if (typeof obj[k] === "string") return obj[k] as string;
-      }
-      const values = Object.values(obj).filter((v) => typeof v === "string");
-      if (values.length) return (values as string[]).join(" ");
-      return JSON.stringify(val);
-    }
     return String(val ?? "");
   };
+
+  const cleanList = (val: unknown): string => {
+    if (typeof val === "string") {
+      return val
+        .replace(/•\s*•/g, "•")
+        .replace(/^\s*[\-\*]\s/gm, "• ")
+        .trim();
+    }
+    return str(val);
+  }
 
   return {
     role: str(parsed.role),
     objective: str(parsed.objective),
-    features: str(parsed.features),
-    techStack: str(parsed.techStack),
-    constraint: str(parsed.constraint),
+    features: cleanList(parsed.features),
+    techStack: cleanList(parsed.techStack),
+    constraint: cleanList(parsed.constraint),
     outputFormat: str(parsed.outputFormat),
   };
 }
